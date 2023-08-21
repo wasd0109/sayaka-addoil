@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getFirestore, collection, addDoc, where, query, getDocs, getCountFromServer } from "firebase/firestore";
+import { getFirestore, collection, addDoc, where, query, getDocs, getCountFromServer, Timestamp } from "firebase/firestore";
 import { useEffect, useState } from 'react';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -24,14 +24,19 @@ const db = getFirestore(app);
 const addOilRef = collection(db, "addoil");
 
 export const useAddOil = (uuid: string) => {
-    const loading = useState(false);
-    const error = useState("")
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("")
     const addOil = async () => {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         const q = query(addOilRef, where("timestamp", ">", today), where("uuid", "==", uuid));
         const snapshot = await getCountFromServer(q);
-        console.log(snapshot.data().count)
+        if (snapshot.data().count !== 0) {
+            setError("請明天再集氣")
+        }
+        else {
+            addDoc(addOilRef, { timestamp: new Date(), uuid })
+        }
     }
     return { addOil, loading, error }
 }
