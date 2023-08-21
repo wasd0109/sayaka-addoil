@@ -24,21 +24,27 @@ const db = getFirestore(app);
 const addOilRef = collection(db, "addoil");
 
 export const useAddOil = (uuid: string) => {
+    const [success, setSuccess] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("")
     const addOil = async () => {
+        setLoading(true);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         const q = query(addOilRef, where("timestamp", ">", today), where("uuid", "==", uuid));
         const snapshot = await getCountFromServer(q);
         if (snapshot.data().count !== 0) {
             setError("請明天再集氣")
+            return Promise.reject("請明天再集氣");
         }
         else {
-            addDoc(addOilRef, { timestamp: new Date(), uuid })
+            await addDoc(addOilRef, { timestamp: new Date(), uuid })
+
         }
+        setLoading(false);
+        return Promise.resolve();
     }
-    return { addOil, loading, error }
+    return { addOil, success, loading, error }
 }
 
 export const useGetAddOilNumber = () => {
