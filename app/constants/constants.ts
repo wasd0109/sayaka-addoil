@@ -1,0 +1,1 @@
+export const DAY_OF_SAYAKA_FALL = new Date("2022-08-29T00:00:00+08:00")
