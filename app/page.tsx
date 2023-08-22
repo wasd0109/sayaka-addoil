@@ -3,24 +3,25 @@ import { useCookies } from 'react-cookie';
 import AddOilWidget from './components/AddOilWidget';
 import DateWidget from './components/DateWidget';
 import ImageWidget from './components/ImageWidget';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useAddOil, useGetAddOilNumber } from './api/useApi';
 import { Toaster, toast } from 'react-hot-toast';
 
 export default function Home() {
-  const [ip, setIp] = useState("");
-  const { addOil, loading: addOilLoading, } = useAddOil(ip);
+  const [cookies, setCookie] = useCookies(["uuid"]);
+  const { addOil, success: addOilSuccess, loading: addOilLoading, error: addOilError } = useAddOil(cookies.uuid);
   const { total, todayTotal, refresh, loading, error } = useGetAddOilNumber();
 
   useEffect(() => {
-    const getIp = async () => {
-      const res = await fetch("https://api.ipify.org?format=json");
-      const { ip } = await res.json();
-      setIp(ip);
-    };
-    getIp();
-  }, []);
+    if (!cookies.uuid) {
+      const uuid = uuidv4();
+      setCookie("uuid", uuid);
+    }
+  }, [cookies, setCookie]);
+
+
+  console.log(cookies);
 
   return (
     <main className="flex flex-col items-center justify-around p-4 m-4 bg-slate-100 font-roboto rounded-md shadow-md" >
@@ -28,9 +29,6 @@ export default function Home() {
       <DateWidget />
       <ImageWidget />
       <button className='bg-nogizaka text-white p-4  mt-4 mb-2 rounded-xl' onClick={() => {
-        if (!ip) {
-          toast.error("請聯絡開發者");
-        }
         if (!addOilLoading) {
           const addOilPromise = addOil(refresh);
           toast.promise(addOilPromise, { loading: "集氣中", success: "成功集氣", error: (error) => error.toString() });
