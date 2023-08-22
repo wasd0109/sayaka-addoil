@@ -23,15 +23,21 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const addOilRef = collection(db, "addoil");
 
-export const useAddOil = (uuid: string) => {
+type useAddOilArgs = {
+    uuid: string;
+    ip: string;
+};
+
+export const useAddOil = ({ uuid, ip }: useAddOilArgs) => {
     const [success, setSuccess] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const uid = ip ? ip : uuid;
     const addOil = async (successCallback: () => void) => {
         setLoading(true);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        const q = query(addOilRef, where("timestamp", ">", today), where("uuid", "==", uuid));
+        const q = query(addOilRef, where("timestamp", ">", today), where("uuid", "==", uid));
         const snapshot = await getCountFromServer(q);
         if (snapshot.data().count !== 0) {
             setError("請明天再集氣");
@@ -39,7 +45,7 @@ export const useAddOil = (uuid: string) => {
             return Promise.reject("請明天再集氣");
         }
         else {
-            await addDoc(addOilRef, { timestamp: new Date(), uuid });
+            await addDoc(addOilRef, { timestamp: new Date(), uid });
         }
         setLoading(false);
         successCallback();

@@ -11,10 +11,9 @@ import { useGetIP } from './api/useGetIp';
 
 export default function Home() {
   const [cookies, setCookie] = useCookies(["uuid"]);
-  const { addOil, success: addOilSuccess, loading: addOilLoading, error: addOilError } = useAddOil(cookies.uuid);
-  const { total, todayTotal, refresh, loading, error } = useGetAddOilNumber();
   const [ip] = useGetIP();
-  console.log(ip);
+  const { addOil, success: addOilSuccess, loading: addOilLoading, error: addOilError } = useAddOil({ uuid: cookies.uuid, ip: ip });
+  const { total, todayTotal, refresh, loading, error } = useGetAddOilNumber();
 
   useEffect(() => {
     if (!cookies.uuid) {
