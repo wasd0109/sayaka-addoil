@@ -17,7 +17,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className}  max-h-dscreen bg-nogizaka`}>{children}
+      <body className={`${inter.className} max-h-dscreen bg-nogizaka`}>{children}
         <Analytics />
       </body>
     </html>
