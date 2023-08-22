@@ -23,14 +23,12 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const addOilRef = collection(db, "addoil");
 
-export const useAddOil = (uuid: string) => {
+export const useAddOil = (ip: string) => {
     const [success, setSuccess] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const addOil = async (successCallback: () => void) => {
         setLoading(true);
-        const res = await fetch("https://api.ipify.org?format=json");
-        const { ip } = await res.json();
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         const q = query(addOilRef, where("timestamp", ">", today), where("uuid", "==", ip));
