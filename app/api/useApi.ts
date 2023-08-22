@@ -37,7 +37,7 @@ export const useAddOil = ({ uuid, ip }: useAddOilArgs) => {
         setLoading(true);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        const q = query(addOilRef, where("timestamp", ">", today), where("uuid", "==", uid));
+        const q = query(addOilRef, where("timestamp", ">", today), where("uid", "==", uid));
         const snapshot = await getCountFromServer(q);
         if (snapshot.data().count !== 0) {
             setError("請明天再集氣");
