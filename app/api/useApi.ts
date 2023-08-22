@@ -27,7 +27,7 @@ export const useAddOil = (uuid: string) => {
     const [success, setSuccess] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-    const addOil = async (successCallback) => {
+    const addOil = async (successCallback: () => void) => {
         setLoading(true);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -35,11 +35,11 @@ export const useAddOil = (uuid: string) => {
         const snapshot = await getCountFromServer(q);
         if (snapshot.data().count !== 0) {
             setError("請明天再集氣");
+            setLoading(false);
             return Promise.reject("請明天再集氣");
         }
         else {
             await addDoc(addOilRef, { timestamp: new Date(), uuid });
-
         }
         setLoading(false);
         successCallback();

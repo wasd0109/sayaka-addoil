@@ -29,8 +29,10 @@ export default function Home() {
       <DateWidget />
       <ImageWidget />
       <button className='bg-nogizaka text-white p-4  mt-4 mb-2 rounded-xl' onClick={() => {
-        const addOilPromise = addOil(refresh);
-        toast.promise(addOilPromise, { loading: "集氣中", success: "成功集氣", error: (error) => error.toString() });
+        if (!addOilLoading) {
+          const addOilPromise = addOil(refresh);
+          toast.promise(addOilPromise, { loading: "集氣中", success: "成功集氣", error: (error) => error.toString() });
+        }
       }}>為掛橋集氣</button>
       <AddOilWidget total={total} todayTotal={todayTotal} loading={loading} />
     </main>
