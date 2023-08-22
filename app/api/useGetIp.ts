@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 export function useGetIP() {
     // Prepare a constant `ip` with empty data by default
-    const [ip, setIp] = useState();
+    const [ip, setIp] = useState("");
 
     const getIp = async () => {
         // Connect ipapi.co with fetch()
