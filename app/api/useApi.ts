@@ -20,28 +20,6 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-let analytics: Analytics;
-
-if (app.name && typeof window !== 'undefined') {
-    getAnalytics(app);
-}
-
-export const logVisit = () => {
-    logEvent(analytics, "site_visited");
-};
-
-export const logAddOil = () => {
-    logEvent(analytics, "oil_adding");
-};
-
-export const logAddOilSuccess = () => {
-    logEvent(analytics, "oil_added");
-};
-
-export const logSpam = () => {
-    logEvent(analytics, "spam");
-};
-
 
 const db = getFirestore(app);
 const addOilRef = collection(db, "addoil");
@@ -52,9 +30,6 @@ type useAddOilArgs = {
 };
 
 export const useAddOil = ({ uuid, ip }: useAddOilArgs) => {
-    if (typeof window !== 'undefined') {
-        logAddOil();
-    }
     const [success, setSuccess] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
@@ -72,9 +47,6 @@ export const useAddOil = ({ uuid, ip }: useAddOilArgs) => {
         }
         else {
             await addDoc(addOilRef, { timestamp: new Date(), uid });
-            if (typeof window !== 'undefined') {
-                logAddOilSuccess();
-            }
         }
         setLoading(false);
         successCallback();
