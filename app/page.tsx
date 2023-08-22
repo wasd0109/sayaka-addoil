@@ -5,11 +5,12 @@ import DateWidget from './components/DateWidget';
 import ImageWidget from './components/ImageWidget';
 import { useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { useAddOil, useGetAddOilNumber } from './api/useApi';
+import { logVisit, useAddOil, useGetAddOilNumber } from './api/useApi';
 import { Toaster, toast } from 'react-hot-toast';
 import { useGetIP } from './api/useGetIp';
 
 export default function Home() {
+  logVisit();
   const [cookies, setCookie] = useCookies(["uuid"]);
   const [ip] = useGetIP();
   const { addOil, success: addOilSuccess, loading: addOilLoading, error: addOilError } = useAddOil({ uuid: cookies.uuid, ip: ip });
