@@ -29,9 +29,11 @@ export const useAddOil = (uuid: string) => {
     const [error, setError] = useState("");
     const addOil = async (successCallback: () => void) => {
         setLoading(true);
+        const res = await fetch("https://api.ipify.org?format=json");
+        const { ip } = await res.json();
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        const q = query(addOilRef, where("timestamp", ">", today), where("uuid", "==", uuid));
+        const q = query(addOilRef, where("timestamp", ">", today), where("uuid", "==", ip));
         const snapshot = await getCountFromServer(q);
         if (snapshot.data().count !== 0) {
             setError("請明天再集氣");
@@ -39,7 +41,7 @@ export const useAddOil = (uuid: string) => {
             return Promise.reject("請明天再集氣");
         }
         else {
-            await addDoc(addOilRef, { timestamp: new Date(), uuid });
+            await addDoc(addOilRef, { timestamp: new Date(), uuid: ip });
         }
         setLoading(false);
         successCallback();
