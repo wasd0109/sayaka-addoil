@@ -10,7 +10,9 @@ import { Toaster, toast } from 'react-hot-toast';
 import { useGetIP } from './api/useGetIp';
 
 export default function Home() {
-  logVisit();
+  if (typeof window !== 'undefined') {
+    logVisit();
+  }
   const [cookies, setCookie] = useCookies(["uuid"]);
   const [ip] = useGetIP();
   const { addOil, success: addOilSuccess, loading: addOilLoading, error: addOilError } = useAddOil({ uuid: cookies.uuid, ip: ip });
