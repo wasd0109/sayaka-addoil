@@ -7,11 +7,14 @@ import { useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useAddOil, useGetAddOilNumber } from './api/useApi';
 import { Toaster, toast } from 'react-hot-toast';
+import { useGetIP } from './api/useGetIp';
 
 export default function Home() {
   const [cookies, setCookie] = useCookies(["uuid"]);
   const { addOil, success: addOilSuccess, loading: addOilLoading, error: addOilError } = useAddOil(cookies.uuid);
   const { total, todayTotal, refresh, loading, error } = useGetAddOilNumber();
+  const [ip] = useGetIP();
+  console.log(ip);
 
   useEffect(() => {
     if (!cookies.uuid) {
@@ -20,8 +23,6 @@ export default function Home() {
     }
   }, [cookies, setCookie]);
 
-
-  console.log(cookies);
 
   return (
     <main className="flex flex-col items-center justify-around p-4 m-4 bg-slate-100 font-roboto rounded-md shadow-md" >
