@@ -52,7 +52,9 @@ type useAddOilArgs = {
 };
 
 export const useAddOil = ({ uuid, ip }: useAddOilArgs) => {
-    logAddOil();
+    if (typeof window !== 'undefined') {
+        logAddOil();
+    }
     const [success, setSuccess] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
@@ -70,7 +72,9 @@ export const useAddOil = ({ uuid, ip }: useAddOilArgs) => {
         }
         else {
             await addDoc(addOilRef, { timestamp: new Date(), uid });
-            logAddOilSuccess();
+            if (typeof window !== 'undefined') {
+                logAddOilSuccess();
+            }
         }
         setLoading(false);
         successCallback();
