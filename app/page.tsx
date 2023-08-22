@@ -15,9 +15,9 @@ export default function Home() {
 
   useEffect(() => {
     const getIp = async () => {
-      const res = await fetch("http://ip-api.com/json",);
-      const { query } = await res.json();
-      setIp(query);
+      const res = await fetch("https://api.ipify.org?format=json");
+      const { ip } = await res.json();
+      setIp(ip);
     };
     getIp();
   }, []);
