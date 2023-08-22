@@ -26,7 +26,7 @@ const addOilRef = collection(db, "addoil");
 export const useAddOil = (uuid: string) => {
     const [success, setSuccess] = useState("");
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("")
+    const [error, setError] = useState("");
     const addOil = async () => {
         setLoading(true);
         const today = new Date();
@@ -34,24 +34,28 @@ export const useAddOil = (uuid: string) => {
         const q = query(addOilRef, where("timestamp", ">", today), where("uuid", "==", uuid));
         const snapshot = await getCountFromServer(q);
         if (snapshot.data().count !== 0) {
-            setError("請明天再集氣")
+            setError("請明天再集氣");
             return Promise.reject("請明天再集氣");
         }
         else {
-            await addDoc(addOilRef, { timestamp: new Date(), uuid })
+            await addDoc(addOilRef, { timestamp: new Date(), uuid });
 
         }
         setLoading(false);
         return Promise.resolve();
-    }
-    return { addOil, success, loading, error }
-}
+    };
+    return { addOil, success, loading, error };
+};
 
 export const useGetAddOilNumber = () => {
     const [total, setTotal] = useState(-1);
     const [todayTotal, setTodayTotal] = useState(-1);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [refresh, setRefresh] = useState({});
+
+    const refreshData = () => setRefresh({});
+
     useEffect(() => {
         const getTotal = async () => {
             const today = new Date();
@@ -60,10 +64,12 @@ export const useGetAddOilNumber = () => {
             const snapshot = await getCountFromServer(addOilRef);
             const snapshotToday = await getCountFromServer(q);
             setTotal(snapshot.data().count);
-            setTodayTotal(snapshotToday.data().count)
+            setTodayTotal(snapshotToday.data().count);
             setLoading(false);
-        }
+        };
         getTotal();
-    }, [])
-    return { total, todayTotal, loading, error }
-}
+    }, [refresh]);
+
+
+    return { total, todayTotal, loading, error, refresh: refreshData };
+};
